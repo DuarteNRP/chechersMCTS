@@ -64,7 +64,8 @@ class Main{
 				Move m=MonteCarlo.montecarlo(game,'O');
 				game.preencher(m.pi,m.pj,m.ni,m.nj);
 				while(game.nextToPlay==ch){
-					MonteCarlo.montecarlo(game,'O');
+					m=MonteCarlo.montecarlo(game,'O');
+					game.preencher(m.pi,m.pj,m.ni,m.nj);
 				}
 			}
 		}
