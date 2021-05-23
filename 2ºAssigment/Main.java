@@ -29,24 +29,29 @@ class Main{
 		}
 		return 'X';
 	}
+	public static void limpaTerminal() {
+        System.out.print("\033[H\033[2J");  
+        System.out.flush(); 
+    }
 	public static void main(String[] arg){
 		Scanner scan = new Scanner(System.in);
-		System.out.println("1vs1");
-		System.out.println("Para jogar tem que ser de um sítio para outro do tipo \"NumeroLetra NumeroLetra\"");
-		System.out.println("Exemplo: \"6A 5B\"");
 		Damas game = new Damas();
 		while(game.complete()=='P'){
 			if(game.allPossibleMoves().size()==0){
 				game.x=0;
 				break;
 			}
+			limpaTerminal();
+			System.out.println("Para jogar tem que ser de um sítio para outro do tipo \"NumeroLetra NumeroLetra\"");
+			Move move= game.allPossibleMoves().get(0);
+			System.out.println("Exemplo: "+(move.pi+1)+""+game.intToChar(move.pj)+" "+(move.ni+1)+""+game.intToChar(move.nj));
 			game.printBoard(game.nextToPlay);
 			String s=scan.nextLine();
 			String[] aux = s.split(" ");
 			int previousN=Character.getNumericValue(aux[0].charAt(0));
-			char previousC=aux[0].charAt(1);
+			char previousC=Character.toUpperCase(aux[0].charAt(1));
 			int nextN=Character.getNumericValue(aux[1].charAt(0));
-			char nextC=aux[1].charAt(1);
+			char nextC=Character.toUpperCase(aux[1].charAt(1));
 			boolean result = game.preencher(previousN-1,charToNumber(previousC),nextN-1,charToNumber(nextC));
 			if(game.complete()=='X')
 				break;
