@@ -16,7 +16,7 @@ public class MonteCarlo{
 			//createChilds(n);
 			visited.add(n);
 			//se só tem um filho
-			if(root.filhos.size()==0)
+			if(root.filhos.size()==1)
 				return root.filhos.get(0).move;
 			//Ver se varia no select
 			double value=-1.0;
