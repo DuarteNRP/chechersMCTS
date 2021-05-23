@@ -65,6 +65,7 @@ class Damas{
 	}
 	void printBoard(char ch){
 		System.out.println("Joga "+ch+"!");
+		System.out.println();
 		if(ch=='X'){
 			for(int i=0;i<8;i++){
 				System.out.print((i+1)+" ");
