@@ -37,7 +37,8 @@ class Main{
 		Damas game = new Damas();
 		while(game.complete()=='P'){
 			if(game.allPossibleMoves().size()==0){
-				game.x==0;
+				game.x=0;
+				break;
 			}
 			game.printBoard(game.nextToPlay);
 			String s=scan.nextLine();
@@ -51,7 +52,8 @@ class Main{
 				break;
 			if(result){
 				if(game.allPossibleMoves().size()==0){
-					game.o==0;
+					game.o=0;
+					break;
 				}
 				char ch = game.nextToPlay;
 				Move m=MonteCarlo.montecarlo(game,'O');
