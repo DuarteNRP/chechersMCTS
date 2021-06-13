@@ -4,11 +4,13 @@ import java.lang.*;
 public class MonteCarlo{
 	private static int nnos=0;
 	public static Move montecarlo(Damas d,char ch){
+		nnos=0;
 		ch=ch;
 		int count=0;
 		Node root=new Node(null,d,null);
+		nnos++;
 		createChilds(root);
-		while(count<50000){
+		while(count<100000){
 			//lista dos visitados
 			LinkedList<Node> visited= new LinkedList<Node>();
 			Node n=root;
@@ -70,7 +72,7 @@ public class MonteCarlo{
 				node=n;
 			}
 		}
-			//System.out.println(max+" "+nnos);
+		System.out.println("Número de nós criados: "+nnos);
 
 		return node.move;
 	}//selecionar no
@@ -121,6 +123,7 @@ public class MonteCarlo{
 	public static void createChilds(Node n){
 		ArrayList<Move> moves= n.d.allPossibleMoves();
 		for(Move m : moves){
+			nnos++;
 			Damas aux = new Damas(n.d);
 			aux.preencher(m.pi,m.pj,m.ni,m.nj);
 			n.filhos.add(new Node(n,aux,m));

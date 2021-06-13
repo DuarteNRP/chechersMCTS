@@ -2,6 +2,7 @@ import java.util.*;
 import java.lang.*;
 
 class Main{
+	public static Scanner scan = new Scanner(System.in);
 	static int charToNumber(char ch){
 		switch(ch){
 			case 'A':
@@ -33,80 +34,14 @@ class Main{
         System.out.print("\033[H\033[2J");  
         System.out.flush(); 
     }
-	public static void main(String[] arg){
-		Scanner scan = new Scanner(System.in);
-		Damas game = new Damas();
-		game.board[0][0].ch='_';
-		game.board[0][1].ch='_';
-		game.board[0][2].ch='_';
-		game.board[0][3].ch='_';
-		game.board[0][4].ch='_';
-		game.board[0][5].ch='_';
-		game.board[0][6].ch='_';
-		game.board[0][7].ch='_';
-		game.board[1][0].ch='_';
-		game.board[1][1].ch='_';
-		game.board[1][2].ch='_';
-		game.board[1][3].ch='_';
-		game.board[1][4].ch='_';
-		game.board[1][5].ch='_';
-		game.board[1][6].ch='_';
-		game.board[1][7].ch='_';
-		game.board[2][0].ch='_';
-		game.board[2][1].ch='_';
-		game.board[2][2].ch='_';
-		game.board[2][3].ch='o';
-		game.board[2][4].ch='_';
-		game.board[2][5].ch='_';
-		game.board[2][6].ch='_';
-		game.board[2][7].ch='_';
-		game.board[3][0].ch='_';
-		game.board[3][1].ch='_';
-		game.board[3][2].ch='_';
-		game.board[3][3].ch='_';
-		game.board[3][4].ch='_';
-		game.board[3][5].ch='_';
-		game.board[3][6].ch='_';
-		game.board[3][7].ch='_';
-		game.board[4][0].ch='_';
-		game.board[4][1].ch='x';
-		game.board[4][2].ch='_';
-		game.board[4][3].ch='_';
-		game.board[4][4].ch='_';
-		game.board[4][5].ch='_';
-		game.board[4][6].ch='_';
-		game.board[4][7].ch='_';
-		game.board[5][0].ch='_';
-		game.board[5][1].ch='_';
-		game.board[5][2].ch='_';
-		game.board[5][3].ch='_';
-		game.board[5][4].ch='_';
-		game.board[5][5].ch='_';
-		game.board[5][6].ch='_';
-		game.board[5][7].ch='_';
-		game.board[6][0].ch='_';
-		game.board[6][1].ch='_';
-		game.board[6][2].ch='_';
-		game.board[6][3].ch='_';
-		game.board[6][4].ch='_';
-		game.board[6][5].ch='_';
-		game.board[6][6].ch='_';
-		game.board[6][7].ch='_';
-		game.board[7][0].ch='_';
-		game.board[7][1].ch='_';
-		game.board[7][2].ch='_';
-		game.board[7][3].ch='_';
-		game.board[7][4].ch='_';
-		game.board[7][5].ch='_';
-		game.board[7][6].ch='_';
-		game.board[7][7].ch='_';
-		limpaTerminal();
+    public static void type2(Damas game){
+    	limpaTerminal();
 		while(game.complete()=='P'){
 			if(game.allPossibleMoves().size()==0){
 				game.x=0;
 				break;
 			}
-			limpaTerminal();
+			System.out.println("És tu a jogar!");
 			System.out.println("Para jogar tem que ser de um sítio para outro do tipo \"NumeroLetra NumeroLetra\"");
 			Move move= game.allPossibleMoves().get(0);
 			System.out.println("Exemplo: "+(move.pi+1)+""+game.intToChar(move.pj)+" "+(move.ni+1)+""+game.intToChar(move.nj));
@@ -125,26 +60,171 @@ class Main{
 			boolean result = game.preencher(previousN-1,charToNumber(previousC),nextN-1,charToNumber(nextC));
 			if(game.complete()=='X')
 				break;
+			if(game.complete()!='P')
+				break;
 			if(result){
+				System.out.println("A tua jogada:");
+				game.printBoard(tradePlay(game.nextToPlay));
 				if(game.allPossibleMoves().size()==0){
 					game.o=0;
 					break;
 				}
 				char ch = game.nextToPlay;
+				long tempoInicial = System.currentTimeMillis();
 				Move m=MonteCarlo.montecarlo(game,'O');
+				int first=m.pi+1;
+				char last=game.intToChar(m.pj);
 				game.preencher(m.pi,m.pj,m.ni,m.nj);
 				while(game.nextToPlay==ch){
 					m=MonteCarlo.montecarlo(game,'O');
 					game.preencher(m.pi,m.pj,m.ni,m.nj);
 				}
+				System.out.println("O método executou em " + ((System.currentTimeMillis() - tempoInicial)/1000.0)+" segundos");
+				System.out.println("O método jogou: "+(first)+""+last+" "+(m.ni+1)+""+game.intToChar(m.nj));
 
 			}
 		}
 		if(game.complete()=='O'){
-			System.out.println("AHAHAHAHA LOSER!!!");
+			System.out.println("Ganhou o Computador!");
+		}
+		else if(game.complete()=='X'){
+			System.out.println("Ganhaste, parabéns!");
+		}
+		else
+			System.out.println("Empate!");
+	
+    }
+    public static void type1(Damas game){
+    	limpaTerminal();
+		while(game.complete()=='P'){
+			System.out.println(game.count);
+			System.out.println("Joga o X!");
+			game.printBoard(game.nextToPlay);
+			if(game.allPossibleMoves().size()==0){
+				game.x=0;
+				break;
+			}
+			char ch = game.nextToPlay;
+			long tempoInicial = System.currentTimeMillis();
+			Move m=MonteCarlo.montecarlo(game,ch);
+			int first=m.pi+1;
+			char last=game.intToChar(m.pj);
+			game.preencher(m.pi,m.pj,m.ni,m.nj);
+			while(game.nextToPlay==ch){
+				m=MonteCarlo.montecarlo(game,'O');
+				game.preencher(m.pi,m.pj,m.ni,m.nj);
+			}
+			System.out.println("O método executou em " + ((System.currentTimeMillis() - tempoInicial)/1000.0)+" segundos");
+			System.out.println("O método jogou: "+(first)+""+last+" "+(m.ni+1)+""+game.intToChar(m.nj));
+			System.out.println();
+			System.out.println(game.count);
+			System.out.println("Joga o O!");
+			game.printBoard(game.nextToPlay);
+			if(game.allPossibleMoves().size()==0){
+				game.o=0;
+				break;
+			}
+			if(game.complete()!='P')
+				break;
+			ch = game.nextToPlay;
+			tempoInicial = System.currentTimeMillis();
+			m=MonteCarlo.montecarlo(game,ch);
+			first=m.pi+1;
+			last=game.intToChar(m.pj);
+			game.preencher(m.pi,m.pj,m.ni,m.nj);
+			while(game.nextToPlay==ch){
+				m=MonteCarlo.montecarlo(game,'O');
+				game.preencher(m.pi,m.pj,m.ni,m.nj);
+			}
+			System.out.println("O método executou em " + ((System.currentTimeMillis() - tempoInicial)/1000.0)+" segundos");
+			System.out.println("O método jogou: "+(first)+""+last+" "+(m.ni+1)+""+game.intToChar(m.nj));
+
+		}
+		if(game.complete()=='O'){
+			System.out.println("Ganhou o O!");
+		}
+		else if(game.complete()=='X'){
+			System.out.println("Ganhou o X!");
+		}
+		else
+			System.out.println("Empate");
+
+    }
+	public static void main(String[] arg){
+		Damas game = new Damas();
+		game.board[0][0].ch='-';
+		game.board[0][1].ch='-';
+		game.board[0][2].ch='-';
+		game.board[0][3].ch='-';
+		game.board[0][4].ch='-';
+		game.board[0][5].ch='-';
+		game.board[0][6].ch='-';
+		game.board[0][7].ch='-';
+		game.board[1][0].ch='-';
+		game.board[1][1].ch='-';
+		game.board[1][2].ch='-';
+		game.board[1][3].ch='-';
+		game.board[1][4].ch='-';
+		game.board[1][5].ch='-';
+		game.board[1][6].ch='-';
+		game.board[1][7].ch='-';
+		game.board[2][0].ch='-';
+		game.board[2][1].ch='-';
+		game.board[2][2].ch='-';
+		game.board[2][3].ch='o';
+		game.board[2][4].ch='-';
+		game.board[2][5].ch='o';
+		game.board[2][6].ch='-';
+		game.board[2][7].ch='-';
+		game.board[3][0].ch='-';
+		game.board[3][1].ch='-';
+		game.board[3][2].ch='-';
+		game.board[3][3].ch='-';
+		game.board[3][4].ch='-';
+		game.board[3][5].ch='-';
+		game.board[3][6].ch='-';
+		game.board[3][7].ch='-';
+		game.board[4][0].ch='-';
+		game.board[4][1].ch='x';
+		game.board[4][2].ch='-';
+		game.board[4][3].ch='x';
+		game.board[4][4].ch='-';
+		game.board[4][5].ch='-';
+		game.board[4][6].ch='-';
+		game.board[4][7].ch='-';
+		game.board[5][0].ch='-';
+		game.board[5][1].ch='-';
+		game.board[5][2].ch='-';
+		game.board[5][3].ch='-';
+		game.board[5][4].ch='-';
+		game.board[5][5].ch='-';
+		game.board[5][6].ch='-';
+		game.board[5][7].ch='-';
+		game.board[6][0].ch='-';
+		game.board[6][1].ch='-';
+		game.board[6][2].ch='-';
+		game.board[6][3].ch='-';
+		game.board[6][4].ch='-';
+		game.board[6][5].ch='-';
+		game.board[6][6].ch='-';
+		game.board[6][7].ch='-';
+		game.board[7][0].ch='-';
+		game.board[7][1].ch='-';
+		game.board[7][2].ch='-';
+		game.board[7][3].ch='-';
+		game.board[7][4].ch='-';
+		game.board[7][5].ch='-';
+		game.board[7][6].ch='-';
+		game.board[7][7].ch='-';
+		System.out.println("Bem-vindo ao jogo das damas!");
+		System.out.println("Escolhe um número:");
+		System.out.println("(1) MonteCarlo vs MonteCarlo");
+		System.out.println("(2) Player vs MonteCarlo");
+		if(scan.nextInt()==1){
+			type1(game);
 		}
 		else{
-			System.out.println("won:"+game.complete());
+			type2(game);
 		}
 	}
 }

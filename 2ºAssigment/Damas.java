@@ -3,7 +3,7 @@ import java.lang.*;
 
 class Damas{
 	Piece[][] board = new Piece[8][8];
-	char nextToPlay='_';
+	char nextToPlay='-';
 	int x=0;
 	int o=0;
 	int count=0;
@@ -17,14 +17,14 @@ class Damas{
 				if(i<=2){
 					if((i%2==0 && j%2!=0) || (i%2!=0 && j%2==0))
 						board[i][j]=new Piece('o');
-					else board[i][j]=new Piece('_');
+					else board[i][j]=new Piece('-');
 				}
 				else if(i>=5){
 					if((i%2==0 && j%2!=0) || (i%2!=0 && j%2==0))
 						board[i][j]=new Piece('x');
-					else board[i][j]=new Piece('_');
+					else board[i][j]=new Piece('-');
 				}
-				else board[i][j]=new Piece('_');
+				else board[i][j]=new Piece('-');
 			}
 		}
 	}
@@ -51,7 +51,7 @@ class Damas{
 			winner='X';
 			return'X';
 		}
-		if(count==20){
+		if(count>=19){
 			winner='E';
 			return 'E';
 		}
@@ -64,7 +64,6 @@ class Damas{
 
 	}
 	void printBoard(char ch){
-		System.out.println("Joga "+ch+"!");
 		System.out.println();
 		if(ch=='X'){
 			for(int i=0;i<8;i++){
@@ -151,7 +150,7 @@ class Damas{
 			case 7:
 			return 'H';
 		}
-		return '_';
+		return '-';
 	}
 	void tradePlayer(){
 		if(nextToPlay=='X')
@@ -164,7 +163,7 @@ class Damas{
 			return 'X';
 		if(ch=='o'|| ch=='O')
 			return 'O';
-		return '_';
+		return '-';
 	}
 	void Xmoves(ArrayList<Move> positionsToEat){
 		for(int i=0;i<8;i++){
@@ -172,14 +171,14 @@ class Damas{
 				if(board[i][j].ch!='X' && board[i][j].ch!='x')
 					continue;
 				if(board[i][j].ch=='X'){
-					if(canSee(i+1,j+1) && isAnother(i+1,j+1,'_'))
+					if(canSee(i+1,j+1) && isAnother(i+1,j+1,'-'))
 						positionsToEat.add(new Move(i,j,i+1,j+1));
-					if(canSee(i+1,j-1) && isAnother(i+1,j-1,'_'))
+					if(canSee(i+1,j-1) && isAnother(i+1,j-1,'-'))
 						positionsToEat.add(new Move(i,j,i+1,j-1));
 				}
-				if(canSee(i-1,j-1) && isAnother(i-1,j-1,'_'))
+				if(canSee(i-1,j-1) && isAnother(i-1,j-1,'-'))
 					positionsToEat.add(new Move(i,j,i-1,j-1));
-				if(canSee(i-1,j+1) && isAnother(i-1,j+1,'_'))
+				if(canSee(i-1,j+1) && isAnother(i-1,j+1,'-'))
 					positionsToEat.add(new Move(i,j,i-1,j+1));
 			}
 		}
@@ -190,14 +189,14 @@ class Damas{
 				if(board[i][j].ch!='O' && board[i][j].ch!='o')
 					continue;
 				if(board[i][j].ch=='O'){
-					if(canSee(i-1,j-1) && isAnother(i-1,j-1,'_'))
+					if(canSee(i-1,j-1) && isAnother(i-1,j-1,'-'))
 							positionsToEat.add(new Move(i,j,i-1,j-1));
-					if(canSee(i-1,j+1) && isAnother(i-1,j+1,'_'))
+					if(canSee(i-1,j+1) && isAnother(i-1,j+1,'-'))
 						positionsToEat.add(new Move(i,j,i-1,j+1));
 				}
-				if(canSee(i+1,j+1) && isAnother(i+1,j+1,'_'))
+				if(canSee(i+1,j+1) && isAnother(i+1,j+1,'-'))
 					positionsToEat.add(new Move(i,j,i+1,j+1));
-				if(canSee(i+1,j-1) && isAnother(i+1,j-1,'_'))
+				if(canSee(i+1,j-1) && isAnother(i+1,j-1,'-'))
 					positionsToEat.add(new Move(i,j,i+1,j-1));
 			}
 		}
@@ -233,9 +232,9 @@ class Damas{
 			}
 			count=0;
 			char ch = board[pi][pj].ch;
-			board[pi][pj].ch='_';
+			board[pi][pj].ch='-';
 			remove();
-			board[move.ii][move.ij].ch='_';
+			board[move.ii][move.ij].ch='-';
 			board[ni][nj].ch=queen(ch,ni,nj);
 			if(ch!=board[ni][nj].ch){
 				tradePlayer();
@@ -245,9 +244,9 @@ class Damas{
 			int i=ni,j=nj;
 			while(positionsToEat.size()==1){
 				ch=board[i][j].ch;
-				board[i][j].ch='_';
+				board[i][j].ch='-';
 				remove();
-				board[positionsToEat.get(0).ii][positionsToEat.get(0).ij].ch='_';
+				board[positionsToEat.get(0).ii][positionsToEat.get(0).ij].ch='-';
 				board[positionsToEat.get(0).ni][positionsToEat.get(0).nj].ch=queen(ch,positionsToEat.get(0).ni,positionsToEat.get(0).nj);
 				i=positionsToEat.get(0).ni;
 				j=positionsToEat.get(0).nj;
@@ -278,7 +277,7 @@ class Damas{
 		}
 		count++;
 		char ch = board[pi][pj].ch;
-		board[pi][pj].ch='_';
+		board[pi][pj].ch='-';
 		board[ni][nj].ch=queen(ch,ni,nj);
 		tradePlayer();
 		return true;
@@ -291,17 +290,17 @@ class Damas{
 					if(board[i][j].ch!='x'&& board[i][j].ch!='X')
 						continue;
 					if(canSee(i-1,j-1) && (isAnother(i-1,j-1,'o')||isAnother(i-1,j-1,'O')))
-						if(canSee(i-2,j-2) && isAnother(i-2,j-2,'_'))
+						if(canSee(i-2,j-2) && isAnother(i-2,j-2,'-'))
 							positionsToEat.add(new Move(i,j,i-1,j-1,i-2,j-2));
 					if(canSee(i-1,j+1) && (isAnother(i-1,j+1,'o')||isAnother(i-1,j+1,'O')))
-						if(canSee(i-2,j+2) && isAnother(i-2,j+2,'_'))
+						if(canSee(i-2,j+2) && isAnother(i-2,j+2,'-'))
 							positionsToEat.add(new Move(i,j,i-1,j+1,i-2,j+2));
 					if(board[i][j].ch=='X'){
 						if(canSee(i+1,j+1) && (isAnother(i+1,j+1,'o')||isAnother(i+1,j+1,'O')))
-							if(canSee(i+2,j+2) && isAnother(i+2,j+2,'_'))
+							if(canSee(i+2,j+2) && isAnother(i+2,j+2,'-'))
 								positionsToEat.add(new Move(i,j,i+1,j+1,i+2,j+2));
 						if(canSee(i+1,j-1) && (isAnother(i+1,j-1,'o')||isAnother(i+1,j-1,'O')))
-							if(canSee(i+2,j-2) && isAnother(i+2,j-2,'_'))
+							if(canSee(i+2,j-2) && isAnother(i+2,j-2,'-'))
 								positionsToEat.add(new Move(i,j,i+1,j-1,i+2,j-2));
 					}
 				}
@@ -312,17 +311,17 @@ class Damas{
 					if(board[i][j].ch!='O'&& board[i][j].ch!='o')
 						continue;
 					if(canSee(i+1,j+1) && (isAnother(i+1,j+1,'x')||isAnother(i+1,j+1,'X')))
-						if(canSee(i+2,j+2) && isAnother(i+2,j+2,'_'))
+						if(canSee(i+2,j+2) && isAnother(i+2,j+2,'-'))
 							positionsToEat.add(new Move(i,j,i+1,j+1,i+2,j+2));
 					if(canSee(i+1,j-1) && (isAnother(i+1,j-1,'x')||isAnother(i+1,j-1,'X')))
-						if(canSee(i+2,j-2) && isAnother(i+2,j-2,'_'))
+						if(canSee(i+2,j-2) && isAnother(i+2,j-2,'-'))
 							positionsToEat.add(new Move(i,j,i+1,j-1,i+2,j-2));
 					if(board[i][j].ch=='O'){
 						if(canSee(i-1,j-1) && (isAnother(i-1,j-1,'x')||isAnother(i-1,j-1,'X')))
-							if(canSee(i-2,j-2) && isAnother(i-2,j-2,'_'))
+							if(canSee(i-2,j-2) && isAnother(i-2,j-2,'-'))
 								positionsToEat.add(new Move(i,j,i-1,j-1,i-2,j-2));
 						if(canSee(i-1,j+1) && (isAnother(i-1,j+1,'x')||isAnother(i-1,j+1,'X')))
-							if(canSee(i-2,j+2) && isAnother(i-2,j+2,'_'))
+							if(canSee(i-2,j+2) && isAnother(i-2,j+2,'-'))
 								positionsToEat.add(new Move(i,j,i-1,j+1,i-2,j+2));
 					}
 				}
@@ -334,33 +333,33 @@ class Damas{
 		ArrayList<Move> positionsToEat = new ArrayList<Move>();
 		if(board[i][j].ch=='x'|| board[i][j].ch=='X'){
 			if(canSee(i-1,j-1) && (isAnother(i-1,j-1,'o')||isAnother(i-1,j-1,'O')))
-				if(canSee(i-2,j-2) && isAnother(i-2,j-2,'_'))
+				if(canSee(i-2,j-2) && isAnother(i-2,j-2,'-'))
 					positionsToEat.add(new Move(i,j,i-1,j-1,i-2,j-2));
 			if(canSee(i-1,j+1) && (isAnother(i-1,j+1,'o')||isAnother(i-1,j+1,'O')))
-				if(canSee(i-2,j+2) && isAnother(i-2,j+2,'_'))
+				if(canSee(i-2,j+2) && isAnother(i-2,j+2,'-'))
 						positionsToEat.add(new Move(i,j,i-1,j+1,i-2,j+2));
 			if(board[i][j].ch=='X'){
 				if(canSee(i+1,j+1) && (isAnother(i+1,j+1,'o')||isAnother(i+1,j+1,'O')))
-					if(canSee(i+2,j+2) && isAnother(i+2,j+2,'_'))
+					if(canSee(i+2,j+2) && isAnother(i+2,j+2,'-'))
 						positionsToEat.add(new Move(i,j,i+1,j+1,i+2,j+2));
 				if(canSee(i+1,j-1) && (isAnother(i+1,j-1,'o')||isAnother(i+1,j-1,'O')))
-					if(canSee(i+2,j-2) && isAnother(i+2,j-2,'_'))
+					if(canSee(i+2,j-2) && isAnother(i+2,j-2,'-'))
 						positionsToEat.add(new Move(i,j,i+1,j-1,i+2,j-2));
 			}
 		}
 		if(board[i][j].ch=='o'|| board[i][j].ch=='O'){
 			if(canSee(i+1,j+1) && (isAnother(i+1,j+1,'x')||isAnother(i+1,j+1,'X')))
-				if(canSee(i+2,j+2) && isAnother(i+2,j+2,'_'))
+				if(canSee(i+2,j+2) && isAnother(i+2,j+2,'-'))
 					positionsToEat.add(new Move(i,j,i+1,j+1,i+2,j+2));
 			if(canSee(i+1,j-1) && (isAnother(i+1,j-1,'x')||isAnother(i+1,j-1,'X')))
-				if(canSee(i+2,j-2) && isAnother(i+2,j-2,'_'))
+				if(canSee(i+2,j-2) && isAnother(i+2,j-2,'-'))
 					positionsToEat.add(new Move(i,j,i+1,j-1,i+2,j-2));
 			if(board[i][j].ch=='O'){
 				if(canSee(i-1,j-1) && (isAnother(i-1,j-1,'x')||isAnother(i-1,j-1,'X')))
-					if(canSee(i-2,j-2) && isAnother(i-2,j-2,'_'))
+					if(canSee(i-2,j-2) && isAnother(i-2,j-2,'-'))
 						positionsToEat.add(new Move(i,j,i-1,j-1,i-2,j-2));
 				if(canSee(i-1,j+1) && (isAnother(i-1,j+1,'x')||isAnother(i-1,j+1,'X')))
-					if(canSee(i-2,j+2) && isAnother(i-2,j+2,'_'))
+					if(canSee(i-2,j+2) && isAnother(i-2,j+2,'-'))
 						positionsToEat.add(new Move(i,j,i-1,j+1,i-2,j+2));
 			}
 		}
