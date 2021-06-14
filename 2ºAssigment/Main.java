@@ -47,6 +47,14 @@ class Main{
 			System.out.println("Exemplo: "+(move.pi+1)+""+game.intToChar(move.pj)+" "+(move.ni+1)+""+game.intToChar(move.nj));
 			game.printBoard(game.nextToPlay);
 			String s=scan.nextLine();
+			int flag=1;
+			while(!testInput(s)){
+				if(flag!=1){
+					System.out.println("Formato da jogada errado");
+				}
+				flag=0;
+				s=scan.nextLine();
+			}
 			String[] aux = s.split(" ");
 			if(aux[0].equals("DESISTO")){
 				game.winner='O';
@@ -65,11 +73,13 @@ class Main{
 			if(result){
 				System.out.println("A tua jogada:");
 				game.printBoard(tradePlay(game.nextToPlay));
+				System.out.println("O computador está a pensar...");
 				if(game.allPossibleMoves().size()==0){
 					game.o=0;
 					break;
 				}
 				char ch = game.nextToPlay;
+				System.out.println();
 				long tempoInicial = System.currentTimeMillis();
 				Move m=MonteCarlo.montecarlo(game,'O');
 				int first=m.pi+1;
@@ -97,7 +107,6 @@ class Main{
     public static void type1(Damas game){
     	limpaTerminal();
 		while(game.complete()=='P'){
-			System.out.println(game.count);
 			System.out.println("Joga o X!");
 			game.printBoard(game.nextToPlay);
 			if(game.allPossibleMoves().size()==0){
@@ -117,7 +126,6 @@ class Main{
 			System.out.println("O método executou em " + ((System.currentTimeMillis() - tempoInicial)/1000.0)+" segundos");
 			System.out.println("O método jogou: "+(first)+""+last+" "+(m.ni+1)+""+game.intToChar(m.nj));
 			System.out.println();
-			System.out.println(game.count);
 			System.out.println("Joga o O!");
 			game.printBoard(game.nextToPlay);
 			if(game.allPossibleMoves().size()==0){
@@ -150,81 +158,41 @@ class Main{
 			System.out.println("Empate");
 
     }
+    public static boolean testInput(String s){
+    	if(s.equals("DESISTO"))
+    		return true;
+		String[] aux = s.split(" ");
+		if(aux.length!=2 || aux[0].length()!=2 || aux[1].length()!=2)
+			return false;
+		int previousN=Character.getNumericValue(aux[0].charAt(0));
+		char previousC=Character.toUpperCase(aux[0].charAt(1));
+		int nextN=Character.getNumericValue(aux[1].charAt(0));
+		char nextC=Character.toUpperCase(aux[1].charAt(1));
+		return true;
+    }
 	public static void main(String[] arg){
 		Damas game = new Damas();
-		game.board[0][0].ch='-';
-		game.board[0][1].ch='-';
-		game.board[0][2].ch='-';
-		game.board[0][3].ch='-';
-		game.board[0][4].ch='-';
-		game.board[0][5].ch='-';
-		game.board[0][6].ch='-';
-		game.board[0][7].ch='-';
-		game.board[1][0].ch='-';
-		game.board[1][1].ch='-';
-		game.board[1][2].ch='-';
-		game.board[1][3].ch='-';
-		game.board[1][4].ch='-';
-		game.board[1][5].ch='-';
-		game.board[1][6].ch='-';
-		game.board[1][7].ch='-';
-		game.board[2][0].ch='-';
-		game.board[2][1].ch='-';
-		game.board[2][2].ch='-';
-		game.board[2][3].ch='o';
-		game.board[2][4].ch='-';
-		game.board[2][5].ch='o';
-		game.board[2][6].ch='-';
-		game.board[2][7].ch='-';
-		game.board[3][0].ch='-';
-		game.board[3][1].ch='-';
-		game.board[3][2].ch='-';
-		game.board[3][3].ch='-';
-		game.board[3][4].ch='-';
-		game.board[3][5].ch='-';
-		game.board[3][6].ch='-';
-		game.board[3][7].ch='-';
-		game.board[4][0].ch='-';
-		game.board[4][1].ch='x';
-		game.board[4][2].ch='-';
-		game.board[4][3].ch='x';
-		game.board[4][4].ch='-';
-		game.board[4][5].ch='-';
-		game.board[4][6].ch='-';
-		game.board[4][7].ch='-';
-		game.board[5][0].ch='-';
-		game.board[5][1].ch='-';
-		game.board[5][2].ch='-';
-		game.board[5][3].ch='-';
-		game.board[5][4].ch='-';
-		game.board[5][5].ch='-';
-		game.board[5][6].ch='-';
-		game.board[5][7].ch='-';
-		game.board[6][0].ch='-';
-		game.board[6][1].ch='-';
-		game.board[6][2].ch='-';
-		game.board[6][3].ch='-';
-		game.board[6][4].ch='-';
-		game.board[6][5].ch='-';
-		game.board[6][6].ch='-';
-		game.board[6][7].ch='-';
-		game.board[7][0].ch='-';
-		game.board[7][1].ch='-';
-		game.board[7][2].ch='-';
-		game.board[7][3].ch='-';
-		game.board[7][4].ch='-';
-		game.board[7][5].ch='-';
-		game.board[7][6].ch='-';
-		game.board[7][7].ch='-';
 		System.out.println("Bem-vindo ao jogo das damas!");
 		System.out.println("Escolhe um número:");
 		System.out.println("(1) MonteCarlo vs MonteCarlo");
 		System.out.println("(2) Player vs MonteCarlo");
-		if(scan.nextInt()==1){
-			type1(game);
-		}
-		else{
-			type2(game);
+		String choice = scan.next();
+		while(true){
+			if(choice.length()!=1){
+				System.out.println("Escolhe apenas 1 ou 2!");
+				choice = scan.next();
+				continue;
+			}
+			if(Character.getNumericValue(choice.charAt(0))==1){
+				type1(game);
+				break;
+			}
+			if(Character.getNumericValue(choice.charAt(0))==2){
+				type2(game);
+				break;
+			}
+			System.out.println("Não escolheste um número válido!");
+			choice = scan.next();
 		}
 	}
 }
