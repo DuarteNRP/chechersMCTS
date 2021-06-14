@@ -254,12 +254,9 @@ class Damas{
 					tradePlayer();
 					return true;
 				}
-				positionsToEat = continueEating(ni,nj);
+				positionsToEat = continueEating(i,j);
 			}
 			if(positionsToEat.size()>1){
-				/*System.out.println("Escolhe uma das opções que tens para comer, por exemplo: "
-					+(positionsToEat.get(0).pi+1)+""+intToChar(positionsToEat.get(0).pj)+" "+
-					(positionsToEat.get(0).ni+1)+""+intToChar(positionsToEat.get(0).nj));*/
 				return false;
 			}
 			tradePlayer();
